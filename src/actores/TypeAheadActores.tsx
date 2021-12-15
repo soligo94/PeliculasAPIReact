@@ -33,6 +33,7 @@ export default function TypeAheadActores(props: typeAheadActoresProps){
         if(actor.id !== elementoArrastrado.id){
             const elementoArrastradoIndice = props.actores.findIndex(x => x.id === elementoArrastrado.id);
             const actorIndice = props.actores.findIndex(x => x.id === actor.id);
+            const actores = [...props.actores];
             actores[actorIndice] = elementoArrastrado;
             actores[elementoArrastradoIndice] = actor;
             props.onAdd(actores);
