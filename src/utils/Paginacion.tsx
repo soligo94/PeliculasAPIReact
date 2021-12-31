@@ -13,11 +13,9 @@ export default function Paginacion(props: paginacionProps){
             pagina: paginaAnterior, 
             activo: false
         });
-        console.log("paso por aqui");
+
         for (let i = 1; i <= props.cantidadTotalDePaginas; i++){
-            console.log("he entrado en el for de crear botones de paginas");
             if (i >= props.paginaActual - props.radio && i <= props.paginaActual + props.radio){
-                console.log("he entrado en el if de crear botones de paginas");
                 links.push({
                     texto:`${i}`,
                     activo: props.paginaActual === i,
