@@ -1,24 +1,27 @@
 import { actorPeliculaDTO } from "./actores.model";
-import { Typeahead } from "react-bootstrap-typeahead";
+import { AsyncTypeahead } from "react-bootstrap-typeahead";
 import { ReactElement, useState } from "react";
 import { Z_ASCII } from "zlib";
+import axios, { AxiosResponse } from "axios";
+import { urlActores } from "../utils/endpoints";
 
 export default function TypeAheadActores(props: typeAheadActoresProps){
 
-    const actores: actorPeliculaDTO[] = [
-        {
-            id: 1, nombre: 'Daniel', personaje: 'Arthas', foto:'https://i.blogs.es/3975a0/world-of-warcraft-rey-exanime/1366_2000.jpeg'
-        },
-        {
-            id: 2, nombre: 'Que?', personaje: 'Arthas', foto:'https://i.blogs.es/3975a0/world-of-warcraft-rey-exanime/1366_2000.jpeg'
-        },
-        {
-            id: 3, nombre: 'Hola', personaje: 'Arthas', foto:'https://i.blogs.es/3975a0/world-of-warcraft-rey-exanime/1366_2000.jpeg'
-        }       
-    ]
+    const [estaCargando, setEstaCargando] = useState(false);
+    const [opciones, setOpciones] = useState<actorPeliculaDTO[]>([]);
     const seleccion: actorPeliculaDTO[] = [];
     const [elementoArrastrado, setElementoArrastrado] = useState<actorPeliculaDTO | undefined>(undefined)
     
+    function manejarBusqueda(query: string){
+        setEstaCargando(true);
+
+        axios.get(`${urlActores}/buscarPorNombre/${query}`)
+        .then((respuesta: AxiosResponse<actorPeliculaDTO[]>) => {
+            setOpciones(respuesta.data);
+            setEstaCargando(false);
+        })
+    }
+
     function handleDragStart(actor: actorPeliculaDTO)
     {
         setElementoArrastrado(actor);
@@ -42,7 +45,7 @@ export default function TypeAheadActores(props: typeAheadActoresProps){
     return(
         <>
             <label>Actores</label>
-            <Typeahead id="typeahead" 
+            <AsyncTypeahead id="typeahead" 
                 onChange={actores =>
                 {
                     if(props.actores.findIndex(x => x.id === actores[0].id) === -1)
@@ -51,9 +54,11 @@ export default function TypeAheadActores(props: typeAheadActoresProps){
                     }
                     console.log(actores);
                 }} 
-                options={actores}
+                options={opciones}
                 labelKey={actor => actor.nombre}
-                filterBy={['nombre']}
+                filterBy={() => true}
+                isLoading={estaCargando}
+                onSearch={manejarBusqueda}
                 placeholder="Escriba el nombre del actor..."
                 minLength={2}
                 flip={true}

@@ -1,4 +1,5 @@
 import { actorCreacionDTO } from "../actores/actores.model";
+import { peliculaCreacionDTO } from "../peliculas/peliculas.model";
 
 export function convertirActorAFormData(actor: actorCreacionDTO) : FormData
 {
@@ -18,6 +19,37 @@ export function convertirActorAFormData(actor: actorCreacionDTO) : FormData
     }
 
     return formData;
+}
+
+export function convertirPeliculaAFormData(pelicula: peliculaCreacionDTO) : FormData
+{
+    const formData  = new FormData();
+
+    formData.append('titulo', pelicula.titulo);
+
+    if (pelicula.resumen)
+    {
+        formData.append('resumen', pelicula.resumen);
+    }
+
+    formData.append('trailer', pelicula.trailer);
+    formData.append('enCines', String(pelicula.enCines));
+
+    if(pelicula.fechaLanzamiento)
+    {
+        formData.append('fechaLanzamiento', formatearData(pelicula.fechaLanzamiento));  
+    }
+        
+   if(pelicula.poster)
+    {
+        formData.append('poster', pelicula.poster);  
+    }
+
+    formData.append("generosIds", JSON.stringify(pelicula.generoIds));
+    formData.append("cinesIds", JSON.stringify(pelicula.cinesIds));
+    formData.append("actores", JSON.stringify(pelicula.actores));
+
+    return formData    
 }
 
 function formatearData(date: Date){

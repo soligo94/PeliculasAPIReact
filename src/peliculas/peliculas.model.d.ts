@@ -11,6 +11,7 @@ export interface peliculaCreacionDTO{
     titulo: string;
     enCines: boolean;
     trailer: string;
+    resumen?: string;
     fechaLanzamiento?: Date;
     poster?: File;
     posterUrl?: string;
@@ -22,4 +23,9 @@ export interface peliculaCreacionDTO{
 export interface landingPageDTO{
     enCartelera?:pelicula[];
     proximosEstrenos?:pelicula[];
+}
+
+export interface peliculasPostGetDTO{
+    generos: generoDTO[];
+    cines: cinesDTO[];
 }
